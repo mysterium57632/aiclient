@@ -1,0 +1,17 @@
+target/
+target/**
+
+log/
+log/**
+
+out/
+out/**
+
+.idea/
+.idea/**
+
+src/test/
+src/test/**
+
+screenshot.png
+config.cfg
