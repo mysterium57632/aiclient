@@ -2,6 +2,7 @@ package de.paull.gui
 
 import de.paull.gui.components.Background
 import de.paull.gui.components.Screenshot
+import de.paull.gui.components.Stats
 import de.paull.gui.components.TerminalEmulator
 import java.awt.*
 import java.awt.event.MouseAdapter
@@ -26,7 +27,11 @@ class Master : Canvas(), Runnable {
     private var render = true
     private var renderer: Thread? = null
 
-    private val shot: Screenshot
+    val prompt: TerminalEmulator
+    val shot: Screenshot
+    val bridge: Bridge
+    private val input: Input
+    val stats: Stats
 
     init {
         size = Frame.SIZE
@@ -36,15 +41,17 @@ class Master : Canvas(), Runnable {
         addMouseMotionListener(m)
 
         shot = Screenshot(this)
-        val prompt = TerminalEmulator(this)
-        val bridge = Bridge(prompt, shot)
-        val input = Input(bridge, prompt)
+        prompt = TerminalEmulator(this)
+        bridge = Bridge(this)
+        input = Input(this)
+        stats = Stats(this)
 
         addKeyListener(input)
 
         elements.add(Background(this))
         elements.add(prompt)
         elements.add(shot)
+        elements.add(stats)
     }
 
     fun start() {
@@ -84,6 +91,7 @@ class Master : Canvas(), Runnable {
         if (rectangle == null) {
             elements[1].draw(g2d)
             elements[2].draw(g2d)
+            elements[3].draw(g2d)
         }
 
         g2d.dispose()

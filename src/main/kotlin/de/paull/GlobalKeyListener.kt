@@ -10,7 +10,7 @@ import java.util.logging.Logger
 class GlobalKeyListener : NativeKeyListener {
 
     companion object {
-        private var frame: Frame? = null
+        var frame: Frame? = null
     }
 
     private var altPressed: Boolean = false
@@ -27,6 +27,7 @@ class GlobalKeyListener : NativeKeyListener {
         if (e?.keyCode == NativeKeyEvent.VC_ALT) {
             altPressed = true
         } else if (altPressed && e?.keyCode == 92) {
+            if (frame != null) return
             frame = Frame()
         } else if (altPressed && e?.keyCode == 3675) {
             frame?.deactivate()

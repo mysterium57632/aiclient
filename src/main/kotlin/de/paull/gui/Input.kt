@@ -7,10 +7,10 @@ import java.awt.datatransfer.StringSelection
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 
+class Input(master: Master) : KeyListener {
 
-class Input(private val bridge: Bridge,
-            private val text: TerminalEmulator
-) : KeyListener {
+    private val bridge: Bridge = master.bridge
+    private val text: TerminalEmulator = master.prompt
 
     override fun keyTyped(e: KeyEvent?) {
         val c = e?.keyChar ?: return

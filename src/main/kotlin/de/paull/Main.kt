@@ -35,3 +35,15 @@ class Main : ConfigHandler.InitializeConfig {
 // fancy animation
 // see how many tokens => And money spend
 // Text when coping to clipbord
+
+/*
+public static List<String> extractLatex(String input) {
+    List<String> latexSnippets = new ArrayList<>();
+    Pattern pattern = Pattern.compile("(\\\\\\(.*?\\\\\\))|(\\$\\$.*?\\$\\$)", Pattern.DOTALL);
+    Matcher matcher = pattern.matcher(input);
+    while (matcher.find()) {
+        latexSnippets.add(matcher.group());
+    }
+    return latexSnippets;
+}
+ */

@@ -1,5 +1,6 @@
 package de.paull.gui
 
+import de.paull.GlobalKeyListener
 import java.awt.*
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
@@ -50,7 +51,7 @@ class Frame : JFrame() {
         this.master = master
 
         revalidate()
-        validate()  // Force the layout to process the new component
+        validate()
         repaint()
 
         SwingUtilities.invokeLater {
@@ -63,6 +64,7 @@ class Frame : JFrame() {
         isVisible = false
         master?.stop()
         dispose()
+        GlobalKeyListener.frame = null
     }
 
     private fun addListener() {

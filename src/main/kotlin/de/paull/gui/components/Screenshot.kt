@@ -35,7 +35,6 @@ class Screenshot(master: Master) : Master.Drawable(master, Frame.SIZE.width - 35
         val imageBytes = outputStream.toByteArray()
         rawImage = Base64.getEncoder().encodeToString(imageBytes)
 
-
         val w = width
         val originalWidth: Int = img.width
         val originalHeight: Int = img.height

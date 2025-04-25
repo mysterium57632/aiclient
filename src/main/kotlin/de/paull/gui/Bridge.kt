@@ -4,7 +4,10 @@ import de.paull.gui.components.Screenshot
 import de.paull.gui.components.TerminalEmulator
 import de.paull.web.Request
 
-class Bridge(private val text: TerminalEmulator, private val shot: Screenshot) {
+class Bridge(private val master: Master) {
+
+    private val text: TerminalEmulator = master.prompt
+    private val shot: Screenshot = master.shot
 
     var blocked = false
         private set
@@ -18,6 +21,7 @@ class Bridge(private val text: TerminalEmulator, private val shot: Screenshot) {
 
     fun onResponse(resp: String, tok: Int) {
         text.addAI(resp)
+        master.stats.update(tok)
         unblock()
         println(tok)
     }

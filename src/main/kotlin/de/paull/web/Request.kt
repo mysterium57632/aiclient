@@ -9,8 +9,8 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
-val url: String = "https://api.openai.com/v1/chat/completions"
-val api = ConfigHandler.get("API_KEY")
+const val url: String = "https://api.openai.com/v1/chat/completions"
+val api: String = ConfigHandler.get("API_KEY")
 
 private fun randomErrorMessage(): String {
     val set = setOf("Fuck", "An error occurred", "There was an error",
@@ -44,7 +44,7 @@ class Request(
         val client: HttpClient = HttpClient.newHttpClient()
 
         val role = "Respond concisely and minimally without formatting characters."
-        val max = 100
+        val max = 300
         val body = createBody(role, text, max)
 
         val request = HttpRequest.newBuilder()
@@ -105,7 +105,7 @@ class Request(
         val json = JSONObject()
         json["model"] = "gpt-4.1-mini"
         json["max_tokens"] = max
-        json["temperature"] = 0.4
+        json["temperature"] = 0.2
         json["n"] = 1
         json["messages"] = jarr
 
