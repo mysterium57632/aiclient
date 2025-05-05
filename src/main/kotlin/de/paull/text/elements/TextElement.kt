@@ -1,6 +1,7 @@
-package de.paull.text
+package de.paull.text.elements
 
 import de.paull.gui.Master
+import de.paull.text.Message
 
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage

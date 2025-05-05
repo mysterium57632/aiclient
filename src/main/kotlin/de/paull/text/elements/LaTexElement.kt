@@ -1,6 +1,8 @@
-package de.paull.text
+package de.paull.text.elements
 
 import de.paull.gui.Master
+import de.paull.text.Message
+import de.paull.text.TextHandler
 import org.scilab.forge.jlatexmath.TeXFormula
 import java.awt.Color
 import java.awt.Graphics2D
@@ -18,7 +20,7 @@ class LaTexElement(private val raw: String, private val inline: Boolean = true) 
     }
 
     override fun draw(g2d: Graphics2D, x: Int, y: Int): Int {
-        val yy = if (inline) y - 14 else y - TextHandler.LINE_HEIGHT + 2
+        val yy = if (inline) y - 19 else y - TextHandler.LINE_HEIGHT + 2
         g2d.drawImage(image, null, x, yy)
         return x + image.width
     }
@@ -29,7 +31,7 @@ class LaTexElement(private val raw: String, private val inline: Boolean = true) 
         val image = BufferedImage(icon.iconWidth, icon.iconHeight, BufferedImage.TYPE_INT_ARGB)
         val g2d = image.createGraphics()
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB)
         g2d.color = Color(255, 255, 255, 0)
         g2d.fillRect(0, 0, image.width, image.height)
         g2d.color = Color.WHITE

@@ -3,6 +3,7 @@ package de.paull.gui.components
 import de.paull.gui.Frame
 import de.paull.gui.Master
 import java.awt.BasicStroke
+import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
@@ -21,8 +22,9 @@ class Screenshot(master: Master) : Master.Drawable(master, Frame.SIZE.width - 35
         g2d.drawString("Screenshot added", x, y)
         g2d.renderingHints.clear()
         g2d.drawImage(img, null, x, y + 18)
+        g2d.color = Color.WHITE
         g2d.stroke = BasicStroke(1f)
-        g2d.drawRect(x, y + 20, img.width, img.height)
+        g2d.drawRect(x, y + 18, img.width, img.height)
     }
 
     override fun start() {}

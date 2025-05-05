@@ -16,7 +16,10 @@ import kotlin.math.max
 class Master : Canvas(), Runnable {
 
     companion object {
-        val FONT = Font("Monospaced", Font.PLAIN, 18)
+        val FONT_SIZE = 18
+        val FONT = Font("Monospaced", Font.PLAIN, FONT_SIZE)
+        val FONT_BOLD = Font("Monospaced", Font.BOLD, FONT_SIZE)
+        val FONT_ITALIC = Font("Monospaced", Font.ITALIC, FONT_SIZE)
     }
 
     @Volatile
@@ -49,8 +52,8 @@ class Master : Canvas(), Runnable {
         addKeyListener(input)
 
         elements.add(Background(this))
-        elements.add(prompt)
         elements.add(shot)
+        elements.add(prompt)
         elements.add(stats)
     }
 
@@ -84,9 +87,6 @@ class Master : Canvas(), Runnable {
         g2d.font = FONT
 
         elements[0].draw(g2d)
-
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB)
 
         if (rectangle == null) {
             elements[1].draw(g2d)

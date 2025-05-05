@@ -20,7 +20,7 @@ class Bridge(private val master: Master) {
     }
 
     fun onResponse(resp: String, tok: Int) {
-        text.addAI(resp)
+        text.text.addAI(resp)
         master.stats.update(tok)
         unblock()
         println(tok)

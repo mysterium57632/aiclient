@@ -5,9 +5,13 @@ import java.awt.*
 
 class Background(master: Master) : Master.Drawable(master) {
 
+    companion object {
+        val COLOR = Color(0, 0, 0, 180)
+    }
+
     override fun draw(g2d: Graphics2D) {
         g2d.composite = AlphaComposite.Src
-        g2d.color = Color(0, 0, 0, 180)
+        g2d.color = COLOR
         g2d.fillRect(0, 0, width, height)
 
         master.rectangle?.let {

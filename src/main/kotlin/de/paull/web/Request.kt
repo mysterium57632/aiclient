@@ -42,8 +42,7 @@ class Request(
 
     override fun run() {
         val client: HttpClient = HttpClient.newHttpClient()
-
-        val role = "Respond concisely and minimally without formatting characters."
+        val role = "Respond concisely and minimally."
         val max = 300
         val body = createBody(role, text, max)
 
@@ -63,7 +62,6 @@ class Request(
         if (errorHandling(json)) return
         val tokens = getTokens(json)
         val message = getMessage(json)
-
         onResp(message, tokens)
     }
 

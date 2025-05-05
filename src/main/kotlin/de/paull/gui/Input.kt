@@ -10,40 +10,40 @@ import java.awt.event.KeyListener
 class Input(master: Master) : KeyListener {
 
     private val bridge: Bridge = master.bridge
-    private val text: TerminalEmulator = master.prompt
+    private val promt: TerminalEmulator = master.prompt
 
     override fun keyTyped(e: KeyEvent?) {
         val c = e?.keyChar ?: return
         if (c.code == KeyEvent.VK_BACK_SPACE) {
-            if (text.typed.isNotEmpty()) {
-                text.typed = text.typed.dropLast(1)
+            if (promt.typed.isNotEmpty()) {
+                promt.typed = promt.typed.dropLast(1)
             }
         } else if (!e.isControlDown && c.isLetterOrDigit() || c.isWhitespace() || c in TerminalEmulator.SONDERZEICHEN) {
-            text.typed += c
+            promt.typed += c
         }
     }
 
     override fun keyPressed(e: KeyEvent?) {
         if (e?.keyCode == KeyEvent.VK_ENTER) {
-            val t = text.typed.trim()
+            val t = promt.typed.trim()
             if (t == "clear")
-                return text.clearTerminal()
+                return promt.clearTerminal()
             if (bridge.blocked) return
-            text.resetInput()
-            text.add(t)
+            promt.resetInput()
+            promt.text.add(t)
             return bridge.onEnter(t)
         }
         if (e?.keyCode == KeyEvent.VK_V && e.isControlDown) {
             try {
                 val clipboard = Toolkit.getDefaultToolkit().systemClipboard
                 val paste = clipboard.getData(DataFlavor.stringFlavor) as String
-                text.typed += paste.trim()
+                promt.typed += paste.trim()
                 return
             } catch (_: Exception) {}
         }
         if (e?.keyCode == KeyEvent.VK_C && e.isControlDown) {
             try {
-                val text = text.lastAwnser ?: return
+                val text = promt.text.lastAiMessage ?: return
                 val stringSelection = StringSelection(text)
                 val toolkit = Toolkit.getDefaultToolkit()
                 val clipboard = toolkit.systemClipboard
