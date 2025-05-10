@@ -1,4 +1,4 @@
-package de.paull
+package de.paull.keys
 
 import de.paull.gui.Frame
 import org.jnativehook.GlobalScreen
@@ -24,6 +24,7 @@ class GlobalKeyListener : NativeKeyListener {
     override fun nativeKeyTyped(p0: NativeKeyEvent?) {}
 
     override fun nativeKeyPressed(e: NativeKeyEvent?) {
+        println(e?.keyCode)
         if (e?.keyCode == NativeKeyEvent.VC_ALT) {
             altPressed = true
         } else if (altPressed && e?.keyCode == 92) {
