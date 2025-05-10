@@ -16,7 +16,7 @@ import kotlin.math.max
 class Master : Canvas(), Runnable {
 
     companion object {
-        val FONT_SIZE = 18
+        const val FONT_SIZE = 18
         val FONT = Font("Monospaced", Font.PLAIN, FONT_SIZE)
         val FONT_BOLD = Font("Monospaced", Font.BOLD, FONT_SIZE)
         val FONT_ITALIC = Font("Monospaced", Font.ITALIC, FONT_SIZE)

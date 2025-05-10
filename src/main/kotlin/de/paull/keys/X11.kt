@@ -1,4 +1,4 @@
-package de.paull
+package de.paull.keys
 
 import com.sun.jna.Library
 import com.sun.jna.Native

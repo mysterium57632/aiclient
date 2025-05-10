@@ -1,5 +1,7 @@
 package de.paull
 
+import de.paull.keys.GlobalKeyListener
+import de.paull.keys.X11KeyListener
 import de.paull.lib.files.ConfigHandler
 import de.paull.lib.output.*
 import org.jnativehook.GlobalScreen
@@ -9,9 +11,10 @@ fun main() {
     Output(ConfigHandler.get("DEBUG").equals("true"), "de.paull")
 
     val keylis = GlobalKeyListener()
-
     GlobalScreen.registerNativeHook()
     GlobalScreen.addNativeKeyListener(keylis)
+
+    //X11KeyListener() )
 }
 
 class Main : ConfigHandler.InitializeConfig {

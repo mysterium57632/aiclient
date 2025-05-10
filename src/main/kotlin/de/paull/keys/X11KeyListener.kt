@@ -2,7 +2,7 @@ package de.paull.keys
 
 import de.paull.gui.Frame
 
-class Test : Runnable {
+class X11KeyListener : Runnable {
 
     companion object {
         var frame: Frame? = null
@@ -20,7 +20,6 @@ class Test : Runnable {
     fun start() {
         val x11 = X11.INSTANCE
         val display = x11.XOpenDisplay(null)
-
 
         if (display == null) {
             println("Unable to open X display")

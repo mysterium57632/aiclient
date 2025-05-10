@@ -9,10 +9,6 @@ import java.util.logging.Logger
 
 class GlobalKeyListener : NativeKeyListener {
 
-    companion object {
-        var frame: Frame? = null
-    }
-
     private var altPressed: Boolean = false
 
     init {
@@ -24,15 +20,14 @@ class GlobalKeyListener : NativeKeyListener {
     override fun nativeKeyTyped(p0: NativeKeyEvent?) {}
 
     override fun nativeKeyPressed(e: NativeKeyEvent?) {
-        println(e?.keyCode)
         if (e?.keyCode == NativeKeyEvent.VC_ALT) {
             altPressed = true
         } else if (altPressed && e?.keyCode == 92) {
-            if (frame != null) return
-            frame = Frame()
+            if (Frame.FRAME != null) return
+            Frame.FRAME = Frame()
         } else if (altPressed && e?.keyCode == 3675) {
-            frame?.deactivate()
-            frame = null
+            Frame.FRAME?.deactivate()
+            Frame.FRAME = null
         }
     }
 
