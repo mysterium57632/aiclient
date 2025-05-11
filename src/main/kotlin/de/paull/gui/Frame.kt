@@ -22,7 +22,7 @@ class Frame : JFrame() {
         val TOP_BAR_HEIGHT = getHeight()
     }
 
-    private var master: Master? = null
+    val master: Master? = null
 
     init {
         isUndecorated = true

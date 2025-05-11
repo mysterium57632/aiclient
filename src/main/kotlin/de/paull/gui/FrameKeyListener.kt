@@ -1,5 +1,6 @@
 package de.paull.gui
 
+import de.paull.gui.components.Chats
 import de.paull.gui.components.TerminalEmulator
 import java.awt.Toolkit
 import java.awt.datatransfer.DataFlavor
@@ -7,7 +8,7 @@ import java.awt.datatransfer.StringSelection
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 
-class Input(master: Master) : KeyListener {
+class FrameKeyListener(master: Master) : KeyListener {
 
     private val bridge: Bridge = master.bridge
     private val promt: TerminalEmulator = master.prompt
@@ -24,15 +25,16 @@ class Input(master: Master) : KeyListener {
     }
 
     override fun keyPressed(e: KeyEvent?) {
+        // On Enter: Send Message or clear terminal / create new Chat
         if (e?.keyCode == KeyEvent.VK_ENTER) {
             val t = promt.typed.trim()
             if (t == "clear")
                 return promt.clearTerminal()
             if (bridge.blocked) return
-            promt.resetInput()
-            promt.text.add(t)
+            promt.sendMessage(t)
             return bridge.onEnter(t)
         }
+
         if (e?.keyCode == KeyEvent.VK_V && e.isControlDown) {
             try {
                 val clipboard = Toolkit.getDefaultToolkit().systemClipboard
@@ -41,9 +43,10 @@ class Input(master: Master) : KeyListener {
                 return
             } catch (_: Exception) {}
         }
+
         if (e?.keyCode == KeyEvent.VK_C && e.isControlDown) {
             try {
-                val text = promt.text.lastAiMessage ?: return
+                val text = Chats.currentChat?.lastAiMessage ?: return
                 val stringSelection = StringSelection(text)
                 val toolkit = Toolkit.getDefaultToolkit()
                 val clipboard = toolkit.systemClipboard

@@ -1,44 +1,38 @@
 package de.paull.gui
 
-import de.paull.gui.components.Screenshot
-import de.paull.gui.components.TerminalEmulator
-import de.paull.web.Request
+import de.paull.gui.components.Chats
+import de.paull.gui.components.Stats
+import de.paull.text.TextField
+import de.paull.web.RequestParser
 
-class Bridge(private val master: Master) {
+var blocked = false
+    private set
 
-    private val text: TerminalEmulator = master.prompt
-    private val shot: Screenshot = master.shot
+fun onEnter(raw: String) {
+    val img = Frame.FRAME?.master?.shot?.rawImage
+    if (img == null) RequestParser().send(raw)
+    else RequestParser().send(raw, img)
+    block()
+}
 
-    var blocked = false
-        private set
+fun onResponse(text: TextField?, resp: String, tok: Int) {
+    text?.addAI(resp) ?: Chats.currentChat?.addAI(resp) ?: return
+    Stats.tokens = tok
+    unblock()
+}
 
-    fun onEnter(raw: String) {
-        val img = shot.rawImage
-        if (img == null) Request(:: onResponse, :: onError).send(raw)
-        else Request(:: onResponse, :: onError).send(raw, img)
-        block()
-    }
+fun onError(mess: String) {
+    unblock()
+    println(mess)
+}
 
-    fun onResponse(resp: String, tok: Int) {
-        text.text.addAI(resp)
-        master.stats.update(tok)
-        unblock()
-        println(tok)
-    }
+private fun block() {
+    blocked = true
+    Frame.FRAME?.master?.prompt?.startThinkTimer() ?: return
+    Frame.FRAME?.master?.shot?.clearImage() ?: return
+}
 
-    fun onError(mess: String) {
-        unblock()
-        println(mess)
-    }
-
-    private fun block() {
-        blocked = true
-        text.startThinkTimer()
-        shot.clearImage()
-    }
-
-    private fun unblock() {
-        blocked = false
-        text.stopThinkTimer()
-    }
+private fun unblock() {
+    blocked = false
+    Frame.FRAME?.master?.prompt?.stopThinkTimer()
 }

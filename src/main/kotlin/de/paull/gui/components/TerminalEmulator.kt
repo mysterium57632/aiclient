@@ -1,20 +1,21 @@
 package de.paull.gui.components
 
+import de.paull.gui.Drawable
 import de.paull.gui.Master
-import de.paull.text.TextHandler
+import de.paull.text.TextField
 import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.RenderingHints
 import javax.swing.Timer
 
-class TerminalEmulator(master: Master) : Master.Drawable(master, 50, 50, 1000) {
+class TerminalEmulator(master: Master) : Drawable(master, 50, 50, 1000) {
 
     companion object {
         val SONDERZEICHEN = setOf('.', ',', ';', ':', '?', '!', '-', '_', '+', '=', '"', '\'', '(', ')', '[', ']', '{', '}')
     }
 
-    val text = TextHandler(width - 50)
     var typed: String = ""
+    val chats = master.chats
 
     private val startX = x
     private val startY = y
@@ -29,7 +30,8 @@ class TerminalEmulator(master: Master) : Master.Drawable(master, 50, 50, 1000) {
         g2d.font = Master.FONT
         g2d.color = Color.WHITE
         var y = startY
-        y = text.draw(startX, y, g2d)
+        val text = Chats.currentChat
+        if (text != null) y = text.draw(startX, y, g2d)
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB)
@@ -81,12 +83,22 @@ class TerminalEmulator(master: Master) : Master.Drawable(master, 50, 50, 1000) {
         drawThink = null
     }
 
-    fun clearTerminal() = text.clear()
+    fun sendMessage(str: String): TextField {
+        var current = Chats.currentChat
+        if (current == null) current = chats.addChat(TextField(width - 50))
+        current.add(str)
+        resetInput()
+        return current
+    }
+
+    fun clearTerminal() {
+        
+    }
 
     fun resetInput() = run { typed = "" }
 
     private fun drawCursor(g2d: Graphics2D, yy: Int) {
-        val y = yy - TextHandler.LINE_HEIGHT + 1
+        val y = yy - TextField.LINE_HEIGHT + 1
         val h = 14
         val x = g2d.fontMetrics.stringWidth("$ $typed") + startX
         g2d.fillRect(x + 1, y - h, 5, h)
@@ -94,6 +106,6 @@ class TerminalEmulator(master: Master) : Master.Drawable(master, 50, 50, 1000) {
 
     private fun drawLine(g2d: Graphics2D, str: String, y: Int): Int {
         g2d.drawString(str, startX, y)
-        return y + TextHandler.LINE_HEIGHT
+        return y + TextField.LINE_HEIGHT
     }
 }

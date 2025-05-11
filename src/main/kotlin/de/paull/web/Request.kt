@@ -1,5 +1,7 @@
 package de.paull.web
 
+import de.paull.gui.onError
+import de.paull.gui.onResponse
 import de.paull.lib.files.ConfigHandler
 import org.json.simple.JSONArray
 import org.json.simple.JSONObject
@@ -18,31 +20,19 @@ private fun randomErrorMessage(): String {
     return set.random()
 }
 
-class Request(
-    private val onResp : (String, Int) -> Unit,
-    private val onError : (String) -> Unit) : Runnable {
+class Request(private val role: String) {
 
     private var text = ""
     private var img = ""
 
-    fun send(text: String) {
-        this.text = text
-        start()
-    }
-
-    fun send(text: String, img: String) {
-        this.text = text
+    fun set(str: String, img: String = ""): Request {
+        this.text = str
         this.img = img
-        start()
+        return this
     }
 
-    private fun start() {
-        Thread(this).start()
-    }
-
-    override fun run() {
+    fun send(): Pair<String, Int>? {
         val client: HttpClient = HttpClient.newHttpClient()
-        val role = "Respond concisely and minimally."
         val max = 300
         val body = createBody(role, text, max)
 
@@ -54,22 +44,22 @@ class Request(
             .build()
 
         val response: HttpResponse<String> = client.send(request, HttpResponse.BodyHandlers.ofString())
-        val resp = response.body() ?: return
+        val resp = response.body() ?: return null
 
         val parser = JSONParser()
-        val json = parser.parse(resp) as? JSONObject ?: return
+        val json = parser.parse(resp) as? JSONObject ?: return null
 
-        if (errorHandling(json)) return
+        if (errorHandling(json)) return null
         val tokens = getTokens(json)
         val message = getMessage(json)
-        onResp(message, tokens)
+        return Pair(message, tokens)
     }
 
     private fun errorHandling(json:JSONObject): Boolean {
         val error = json["error"] as? JSONObject ?: return false
         val type = error["type"] ?: ""
         if (type == "insufficient_quota")
-            onResp("You exceeded your current quota, please check your plan and billing details.", 0)
+            onResponse(null, "You exceeded your current quota, please check your plan and billing details.", 0)
         else onError("$type: ${error["message"] ?: "unknown"}")
         return true
     }

@@ -4,18 +4,17 @@ import de.paull.text.Message.Element
 import de.paull.text.elements.TextElement
 import java.awt.Graphics2D
 
-class Line {
+class Line(private val width: Int) {
 
     companion object {
-        private var MAX_WIDTH = Message.WIDTH
-        val EMPTY_LINE = Line()
+        val EMPTY_LINE = Line(0)
     }
 
     private val elements: MutableList<Element> = mutableListOf()
     private var size: Int = 0
 
     fun add(e: Element) : Element? {
-        if (size + e.width < MAX_WIDTH) {
+        if (size + e.width < width) {
             elements.add(e)
             calcSize()
             return null
@@ -24,7 +23,7 @@ class Line {
         if (e !is TextElement)
             return e
 
-        val maxLength = MAX_WIDTH - size
+        val maxLength = width - size
         val (short, new) = e.split(maxLength, isEmpty())
         if (short != null) elements.add(short)
         return new
@@ -35,7 +34,7 @@ class Line {
     fun draw(g2d: Graphics2D, y: Int): Int {
         var x = 0
         for (e in elements) x = e.draw(g2d, x, y)
-        return y + TextHandler.LINE_HEIGHT
+        return y + TextField.LINE_HEIGHT
     }
 
     private fun calcSize() {

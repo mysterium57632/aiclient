@@ -2,7 +2,7 @@ package de.paull.text.elements
 
 import de.paull.gui.Master
 import de.paull.text.Message
-import de.paull.text.TextHandler
+import de.paull.text.TextField
 import org.scilab.forge.jlatexmath.TeXFormula
 import java.awt.Color
 import java.awt.Graphics2D
@@ -20,8 +20,16 @@ class LaTexElement(private val raw: String, private val inline: Boolean = true) 
     }
 
     override fun draw(g2d: Graphics2D, x: Int, y: Int): Int {
-        val yy = if (inline) y - 19 else y - TextHandler.LINE_HEIGHT + 2
+        val yy = if (inline) y - 19 else y - TextField.LINE_HEIGHT + 2
         g2d.drawImage(image, null, x, yy)
+
+        val c: Color = g2d.color
+        g2d.color = Color.RED
+        g2d.drawRect(x, yy, image.width, image.height)
+        g2d.color = Color.BLUE
+        g2d.drawLine(x - 5, yy + image.height / 2, x + image.width + 10, image.height / 2)
+        g2d.color = c
+
         return x + image.width
     }
 

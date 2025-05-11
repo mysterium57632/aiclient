@@ -1,20 +1,20 @@
 package de.paull.gui.components
 
+import de.paull.gui.Drawable
 import de.paull.gui.Master
 import java.awt.*
 
-class Background(master: Master) : Master.Drawable(master) {
+class Background(master: Master) : Drawable(master) {
 
     companion object {
-        val COLOR = Color(0, 0, 0, 180)
     }
 
     override fun draw(g2d: Graphics2D) {
         g2d.composite = AlphaComposite.Src
-        g2d.color = COLOR
+        g2d.color = Master.COLOR_BACKGROUND
         g2d.fillRect(0, 0, width, height)
 
-        master.rectangle?.let {
+        master.shot.rectangle?.let {
             g2d.composite = AlphaComposite.Clear
             g2d.fillRect(it.x, it.y, it.width, it.height)
 

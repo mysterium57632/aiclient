@@ -7,10 +7,9 @@ import java.awt.Point
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-class Message(raw: String, private val fromAI: Boolean = false) {
+class Message(raw: String, private val fromAI: Boolean = false, private val width: Int) {
 
     companion object {
-        val WIDTH = TextHandler.WIDTH
         private val latexInlinePattern: Pattern = Pattern.compile("\\\\[(](.*?[^\\\\])\\\\[)]", Pattern.DOTALL)
     }
 
@@ -34,7 +33,7 @@ class Message(raw: String, private val fromAI: Boolean = false) {
             }
 
             if (latexOn) {
-                val line = Line()
+                val line = Line(width)
                 line.add(LaTexElement(l.trim(), false))
                 this.lines.add(line)
                 continue
@@ -45,23 +44,23 @@ class Message(raw: String, private val fromAI: Boolean = false) {
         }
     }
 
-    fun getHeight(): Int = lines.size * TextHandler.LINE_HEIGHT + TextHandler.MESSAGE_SPACING
+    fun getHeight(): Int = lines.size * TextField.LINE_HEIGHT + TextField.MESSAGE_SPACING
 
     fun draw(g2d: Graphics2D, yy: Int): Int {
         var y = yy
         for (l in lines) y = l.draw(g2d, y)
-        return y + TextHandler.MESSAGE_SPACING
+        return y + TextField.MESSAGE_SPACING
     }
 
     private fun createLine(s: String) {
         var currentText = s
         var con: Boolean
-        var l = Line()
+        var l = Line(width)
 
         fun addElement(e: Element) {
             val ele = l.add(e) ?: return
             lines.add(l)
-            l = Line()
+            l = Line(width)
             addElement(ele)
         }
 
