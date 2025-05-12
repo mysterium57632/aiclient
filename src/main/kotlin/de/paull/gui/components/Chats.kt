@@ -13,7 +13,6 @@ class Chats(master : Master) : Drawable(master, y = 100, width = 200, height = 8
     companion object {
         private val chats: MutableList<TextField> = mutableListOf()
         var currentChat: TextField? = null
-            private set
     }
 
     private val PATH_BORDER: GeneralPath?

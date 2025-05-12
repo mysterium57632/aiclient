@@ -1,5 +1,6 @@
 package de.paull.gui
 
+import de.paull.gui.components.Chats
 import java.awt.*
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
@@ -22,7 +23,7 @@ class Frame : JFrame() {
         val TOP_BAR_HEIGHT = getHeight()
     }
 
-    val master: Master? = null
+    var master: Master? = null
 
     init {
         isUndecorated = true
@@ -39,6 +40,9 @@ class Frame : JFrame() {
     }
 
     fun activate() {
+        Chats.currentChat = null
+
+
         if (isVisible) return
         isVisible = true
 
