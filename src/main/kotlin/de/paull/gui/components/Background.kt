@@ -10,10 +10,10 @@ class Background(master: Master) : Drawable(master) {
     }
 
     override fun draw(g2d: Graphics2D) {
+        g2d.setRenderingHints(Master.FAST_RENDER_HINTS)
         g2d.composite = AlphaComposite.Src
         g2d.color = Master.COLOR_BACKGROUND
         g2d.fillRect(0, 0, width, height)
-
         master.shot.rectangle?.let {
             g2d.composite = AlphaComposite.Clear
             g2d.fillRect(it.x, it.y, it.width, it.height)

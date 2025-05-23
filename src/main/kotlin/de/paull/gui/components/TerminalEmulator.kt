@@ -3,22 +3,25 @@ package de.paull.gui.components
 import de.paull.gui.Drawable
 import de.paull.gui.Master
 import de.paull.text.TextField
+import de.paull.text.TextField.Companion.LINE_HEIGHT
+import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.RenderingHints
 import javax.swing.Timer
 
-class TerminalEmulator(master: Master) : Drawable(master, 50, 50, 1000) {
+class TerminalEmulator(master: Master) : Drawable(master, 220, 100, 800, height = 900) {
 
     companion object {
-        val SONDERZEICHEN = setOf('.', ',', ';', ':', '?', '!', '-', '_', '+', '=', '"', '\'', '(', ')', '[', ']', '{', '}')
+        val SONDERZEICHEN = setOf('.', ',', ';', ':', '?', '!', '-', '_', '+', '=', '"', '\'', '(', ')',
+            '[', ']', '{', '}', '^', '&', '*', '\\', '/', '%', '$', '@', '#')
     }
 
     var typed: String = ""
     val chats = master.chats
 
-    private val startX = x
-    private val startY = y
+    private val startX = x + 10
+    private val startY = y + 5
 
     private var cursorTimer: Timer? = null
     private var drawCursor = true
@@ -27,15 +30,18 @@ class TerminalEmulator(master: Master) : Drawable(master, 50, 50, 1000) {
     private var drawThink: String? = null
 
     override fun draw(g2d: Graphics2D) {
+        drawBackground(g2d)
+
         g2d.font = Master.FONT
         g2d.color = Color.WHITE
+
         var y = startY
-        val text = Chats.currentChat
+        val text = chats.currentChat
         if (text != null) y = text.draw(startX, y, g2d)
+        else y += LINE_HEIGHT
 
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB)
-
+        g2d.setRenderingHints(Master.TEXT_RENDER_HINTS)
+        g2d.color = Color.WHITE
         val dt = drawThink
         if (dt != null) {
             g2d.color = Color.GRAY
@@ -72,7 +78,8 @@ class TerminalEmulator(master: Master) : Drawable(master, 50, 50, 1000) {
         stopThinkTimer()
     }
 
-    private fun stopCursor() {
+    fun stopCursor() {
+        drawCursor = false
         cursorTimer?.stop() ?: return
         cursorTimer = null
     }
@@ -84,21 +91,23 @@ class TerminalEmulator(master: Master) : Drawable(master, 50, 50, 1000) {
     }
 
     fun sendMessage(str: String): TextField {
-        var current = Chats.currentChat
+        var current = chats.currentChat
         if (current == null) current = chats.addChat(TextField(width - 50))
         current.add(str)
         resetInput()
+        chats.requestFocus(current)
         return current
     }
 
     fun clearTerminal() {
-        
+        resetInput()
+        chats.highlightIndex = -1
     }
 
     fun resetInput() = run { typed = "" }
 
     private fun drawCursor(g2d: Graphics2D, yy: Int) {
-        val y = yy - TextField.LINE_HEIGHT + 1
+        val y = yy - LINE_HEIGHT + 1
         val h = 14
         val x = g2d.fontMetrics.stringWidth("$ $typed") + startX
         g2d.fillRect(x + 1, y - h, 5, h)
@@ -106,6 +115,17 @@ class TerminalEmulator(master: Master) : Drawable(master, 50, 50, 1000) {
 
     private fun drawLine(g2d: Graphics2D, str: String, y: Int): Int {
         g2d.drawString(str, startX, y)
-        return y + TextField.LINE_HEIGHT
+        return y + LINE_HEIGHT
+    }
+
+    private fun drawBackground(g2d: Graphics2D) {
+        g2d.setRenderingHints(Master.FAST_RENDER_HINTS)
+        g2d.color = Master.COLOR_ELEMENT
+        g2d.fillRoundRect(x, y, width, height, 8, 8)
+
+        //g2d.setRenderingHints(Master.TEXT_RENDER_HINTS)
+        g2d.color = Color.GRAY
+        g2d.stroke = BasicStroke(2f)
+        g2d.drawRoundRect(x, y, width, height, 8, 8)
     }
 }

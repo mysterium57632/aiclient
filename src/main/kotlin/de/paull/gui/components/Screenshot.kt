@@ -79,7 +79,7 @@ class Screenshot(master: Master) : Drawable(master, Frame.SIZE.width - 350, 50, 
         val targetHeight: Int = (w * originalHeight) / originalWidth
         val scaledImage = BufferedImage(w, targetHeight, BufferedImage.TYPE_INT_ARGB)
         val g2d = scaledImage.createGraphics()
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR)
+        g2d.setRenderingHints(Master.IMAGE_RENDER_HINTS)
         g2d.drawImage(img, 0, 0, w, targetHeight, null)
         g2d.dispose()
         this.scaledImage = scaledImage

@@ -8,15 +8,15 @@ import de.paull.web.RequestParser
 var blocked = false
     private set
 
-fun onEnter(raw: String) {
+fun onEnter(raw: String, field: TextField) {
     val img = Frame.FRAME?.master?.shot?.rawImage
-    if (img == null) RequestParser().send(raw)
-    else RequestParser().send(raw, img)
+    if (img == null) RequestParser(field).send(raw)
+    else RequestParser(field).send(raw, img)
     block()
 }
 
 fun onResponse(text: TextField?, resp: String, tok: Int) {
-    text?.addAI(resp) ?: Chats.currentChat?.addAI(resp) ?: return
+    text?.addAI(resp) ?: Frame.FRAME?.master?.chats?.currentChat?.addAI(resp) ?: return
     Stats.tokens = tok
     unblock()
 }

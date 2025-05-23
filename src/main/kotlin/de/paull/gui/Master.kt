@@ -5,6 +5,7 @@ import de.paull.gui.components.Chats
 import de.paull.gui.components.Screenshot
 import de.paull.gui.components.Stats
 import de.paull.gui.components.TerminalEmulator
+import de.paull.keys.FrameKeyListener
 import java.awt.*
 import kotlin.math.max
 
@@ -18,36 +19,46 @@ class Master : Canvas(), Runnable {
         val FONT_HEADER = Font("Monospaced", Font.PLAIN, 30)
 
         val COLOR_BACKGROUND = Color(0, 0, 0, 120)
-        val COLOR_ELEMENT = Color(0, 0, 0, 180)
+        val COLOR_ELEMENT = Color(0, 0, 0, 200)
+        val COLOR_HIGHLIGHT = Color(50, 50, 50, 200)
+
+        val TEXT_RENDER_HINTS = RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON).apply {
+            put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
+            put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY)
+            put(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON)
+        }
+
+        val IMAGE_RENDER_HINTS = RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF).apply {
+            put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED)
+            put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
+        }
+
+        val FAST_RENDER_HINTS = RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF).apply {
+            put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED)
+        }
     }
 
     private val elements: MutableList<Drawable> = mutableListOf()
     private var render = true
     private var renderer: Thread? = null
 
+    val back = Background(this)
     val prompt: TerminalEmulator
     val shot: Screenshot
-    val bridge: Bridge
-    private val input: FrameKeyListener
+    val input: FrameKeyListener
     val stats: Stats
-    val chats: Chats
+    val chats: Chats = Chats(this)
 
     init {
         size = Frame.SIZE
+        focusTraversalKeysEnabled = false // So TAB gets recognized by the KeyListener
         background = Color(0, 0, 0, 0)
 
         shot = Screenshot(this)
         prompt = TerminalEmulator(this)
-        bridge = Bridge(this)
         input = FrameKeyListener(this)
         stats = Stats(this)
         addKeyListener(input)
-
-        elements.add(Background(this))
-        elements.add(shot)
-        elements.add(prompt)
-        elements.add(stats)
-        elements.add(Chats(this))
     }
 
     fun start() {
@@ -59,8 +70,9 @@ class Master : Canvas(), Runnable {
         r.start()
         this.renderer = r
         // Start other Elements
-        for (e in elements)
+        for (e in elements) {
             e.start()
+        }
     }
 
     fun stop() {
@@ -74,23 +86,22 @@ class Master : Canvas(), Runnable {
 
         g2d.font = FONT
 
-        elements[0].draw(g2d)
-
+        back.draw(g2d)
         if (shot.rectangle == null) {
-            elements[1].draw(g2d)
-            elements[2].draw(g2d)
-            elements[3].draw(g2d)
-            elements[4].draw(g2d)
+            prompt.draw(g2d)
+            chats.draw(g2d)
+            shot.draw(g2d)
+            stats.draw(g2d)
         }
 
         g2d.dispose()
+        if (Frame.FRAME == null || !Frame.FRAME!!.isVisible) return
         bufferStrategy.show()
         Toolkit.getDefaultToolkit().sync()
     }
-
-
+    
     /**
-     * Frame update loop
+     * Frame update draw loop
      */
     override fun run() {
         fun sleep(t: Long) {
@@ -100,9 +111,10 @@ class Master : Canvas(), Runnable {
         }
 
         while (render) {
-            var time = System.currentTimeMillis()
+            var time = System.nanoTime()
             drawFrame()
-            time = System.currentTimeMillis() - time
+            time = System.nanoTime() - time
+            stats.addFPS((1_000_000_000.0 / time.toDouble()).toInt())
             time = max(15 - time, 0) // should be ruffly 60 FPS
             if (time > 0) sleep(time)
         }

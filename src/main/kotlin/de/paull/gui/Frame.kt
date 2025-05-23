@@ -36,13 +36,10 @@ class Frame : JFrame() {
         isFocusable = true
         addListener()
 
-        activate()
+        // activate()
     }
 
     fun activate() {
-        Chats.currentChat = null
-
-
         if (isVisible) return
         isVisible = true
 
@@ -62,8 +59,8 @@ class Frame : JFrame() {
     }
 
     fun deactivate() {
-        isVisible = false
         master?.stop()
+        isVisible = false
         dispose()
         FRAME = null
     }

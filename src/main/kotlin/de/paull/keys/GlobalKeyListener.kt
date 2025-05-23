@@ -22,7 +22,7 @@ class GlobalKeyListener : NativeKeyListener {
     override fun nativeKeyPressed(e: NativeKeyEvent?) {
         if (e?.keyCode == NativeKeyEvent.VC_ALT) {
             altPressed = true
-        } else if (altPressed && e?.keyCode == NativeKeyEvent.VC_ESCAPE) {
+        } else if (altPressed && e?.keyCode == NativeKeyEvent.VC_BACKSPACE) {
             if (Frame.FRAME != null) return
             Frame.FRAME = Frame()
         } else if (altPressed && e?.keyCode == 3675) {

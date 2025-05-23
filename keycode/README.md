@@ -2,6 +2,7 @@
 
 ## Get KeyCodes
 
+With this simple class you can retrieve the key-codes for Java's JFrame.
 Just run the **startup file** and voilà — you'll get your **KeyCode** instantly.
 
 ---
@@ -12,4 +13,4 @@ Just run the **startup file** and voilà — you'll get your **KeyCode** instant
 ./start.sh
 ```
 
-You need to have the Kotlin compiler installed.
+You need to have the **Kotlin compiler** installed.

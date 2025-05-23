@@ -1,9 +1,13 @@
 package de.paull.text
 
+import de.paull.gui.Master
+import de.paull.gui.components.Chats
 import de.paull.text.elements.LaTexElement
 import de.paull.text.elements.TextElement
+import java.awt.FontMetrics
 import java.awt.Graphics2D
 import java.awt.Point
+import java.awt.image.BufferedImage
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -15,6 +19,12 @@ class Message(raw: String, private val fromAI: Boolean = false, private val widt
 
     private val rawText: String = raw.trim()
     private val lines: MutableList<Line> = mutableListOf()
+    var display: String = ""
+         get() {
+            if (field.isEmpty())
+                field = getDisplayName()
+            return field
+        }
 
     init {
         val t = "> $rawText"
@@ -92,6 +102,24 @@ class Message(raw: String, private val fromAI: Boolean = false, private val widt
         } catch (_: IllegalStateException) {
             return Pair(null, "")
         }
+    }
+
+    private fun getDisplayName(): String {
+        if (rawText.isEmpty()) return ""
+        val dummy: Graphics2D = BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).createGraphics()
+        val font = Master.FONT
+        val metrics: FontMetrics = dummy.getFontMetrics(font)
+        val maxWidth = Chats.WIDTH - 10 - metrics.stringWidth("...")
+        if (metrics.stringWidth(rawText) <= maxWidth) return rawText
+        var result = ""
+        for (i in rawText.indices) {
+            val substr = rawText.substring(0, i + 1)
+            if (metrics.stringWidth(substr) > maxWidth) {
+                return "${rawText.substring(0, i)}..."
+            }
+            result = substr
+        }
+        return "$result..."
     }
 
     abstract class Element {

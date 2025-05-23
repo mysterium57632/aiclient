@@ -31,11 +31,8 @@ class Main : ConfigHandler.InitializeConfig {
 }
 
 // TODO
-// add fps
-// add title
 // add history in console (last questions)
 // remove screenshoot again
 // fancy animation
-// see how many tokens => And money spend
 // Text when coping to clipbord
 // Fix screenshot white edge

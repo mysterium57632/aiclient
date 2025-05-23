@@ -2,6 +2,8 @@ package de.paull.text
 
 import de.paull.gui.Master
 import java.awt.Color
+import java.awt.Font
+import java.awt.FontMetrics
 import java.awt.Graphics2D
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
@@ -17,9 +19,21 @@ class TextField(val width: Int) {
     private val messages: MutableList<Message> = mutableListOf()
     var lastAiMessage: String? = null
         private set
+
     private var image: BufferedImage? = null
 
+    val displayName: String
+        get() {
+            try {
+                return messages[0].display
+            } catch (_: IndexOutOfBoundsException) {}
+            return "Unknown"
+        }
+
+
+
     fun draw(x: Int, y: Int, g2d: Graphics2D): Int {
+        g2d.setRenderingHints(Master.IMAGE_RENDER_HINTS)
         val img = image ?: return y + LINE_HEIGHT
         g2d.drawImage(img, null, x, y)
         return y + img.height + LINE_HEIGHT - FAKE_SPACE
