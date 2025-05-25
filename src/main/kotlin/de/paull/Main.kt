@@ -1,20 +1,14 @@
 package de.paull
 
-import de.paull.gui.Frame
-import de.paull.keys.GlobalKeyListener
 import de.paull.lib.files.ConfigHandler
 import de.paull.lib.output.*
-import org.jnativehook.GlobalScreen
+import de.paull.net.NotifyServer
 
 fun main() {
     ConfigHandler("config.cfg", "CONFIG", Main())
     Output(ConfigHandler.get("DEBUG").equals("true"), "de.paull")
 
-    Frame.FRAME = Frame()
-
-    val keylis = GlobalKeyListener()
-    GlobalScreen.registerNativeHook()
-    GlobalScreen.addNativeKeyListener(keylis)
+    NotifyServer()
 }
 
 class Main : ConfigHandler.InitializeConfig {
@@ -25,9 +19,10 @@ class Main : ConfigHandler.InitializeConfig {
         map["LOG_FILE"] = "log/webserver.log"
         map["ERR_FILE"] = "log/error.log"
         map["API_KEY"] = "-"
+        map["NOTIFY_PORT"] = "42000"
+        map["CREATE_SCRIPT"] = "true"
         return map
     }
-
 }
 
 // TODO

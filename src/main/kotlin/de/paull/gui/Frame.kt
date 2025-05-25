@@ -1,6 +1,5 @@
 package de.paull.gui
 
-import de.paull.gui.components.Chats
 import java.awt.*
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
@@ -36,7 +35,7 @@ class Frame : JFrame() {
         isFocusable = true
         addListener()
 
-        // activate()
+        activate()
     }
 
     fun activate() {

@@ -30,7 +30,7 @@ class TextField(val width: Int) {
             return "Unknown"
         }
 
-
+    /* FUNCTIONS */
 
     fun draw(x: Int, y: Int, g2d: Graphics2D): Int {
         g2d.setRenderingHints(Master.IMAGE_RENDER_HINTS)
@@ -66,7 +66,7 @@ class TextField(val width: Int) {
         // Create Image
         val img = BufferedImage(width, height + FAKE_SPACE, BufferedImage.TYPE_INT_ARGB)
         val g2d = img.createGraphics() as Graphics2D
-        g2d.color = Master.COLOR_BACKGROUND
+        g2d.color = Master.COLOR_ELEMENT
         g2d.fillRect(0, 0, img.width, img.height)
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB)
@@ -90,5 +90,4 @@ class TextField(val width: Int) {
             function()
         }.start()
     }
-
 }

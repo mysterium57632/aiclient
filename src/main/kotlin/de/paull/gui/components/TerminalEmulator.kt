@@ -7,7 +7,6 @@ import de.paull.text.TextField.Companion.LINE_HEIGHT
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
-import java.awt.RenderingHints
 import javax.swing.Timer
 
 class TerminalEmulator(master: Master) : Drawable(master, 220, 100, 800, height = 900) {
@@ -123,7 +122,6 @@ class TerminalEmulator(master: Master) : Drawable(master, 220, 100, 800, height 
         g2d.color = Master.COLOR_ELEMENT
         g2d.fillRoundRect(x, y, width, height, 8, 8)
 
-        //g2d.setRenderingHints(Master.TEXT_RENDER_HINTS)
         g2d.color = Color.GRAY
         g2d.stroke = BasicStroke(2f)
         g2d.drawRoundRect(x, y, width, height, 8, 8)

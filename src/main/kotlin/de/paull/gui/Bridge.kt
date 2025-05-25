@@ -1,9 +1,8 @@
 package de.paull.gui
 
-import de.paull.gui.components.Chats
 import de.paull.gui.components.Stats
 import de.paull.text.TextField
-import de.paull.web.RequestParser
+import de.paull.net.RequestParser
 
 var blocked = false
     private set

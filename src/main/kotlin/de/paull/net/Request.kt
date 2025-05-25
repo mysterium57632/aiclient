@@ -1,4 +1,4 @@
-package de.paull.web
+package de.paull.net
 
 import de.paull.gui.onError
 import de.paull.gui.onResponse
